@@ -37,41 +37,63 @@
   }
   *{box-sizing:border-box;}
   :root{ --header-h: 140px; }
-  html{scroll-behavior:smooth; scroll-snap-type:y mandatory;}
+  html{
+    min-height:100%;
+    scroll-behavior:smooth;
+    /* Soft snap keeps the chapter feel without trapping the first/last content. */
+    scroll-snap-type:y proximity;
+    scroll-padding-top:calc(var(--header-h) + 20px);
+    scroll-padding-bottom:40px;
+  }
   body{
     margin:0;
+    min-height:100%;
     background:var(--ink);
     color:var(--cream);
     font-family:'Pretendard Variable','Freesentation',-apple-system,sans-serif;
     -webkit-font-smoothing:antialiased;
     overflow-x:hidden;
+    overscroll-behavior-y:auto;
     word-break:keep-all;
     overflow-wrap:break-word;
   }
-  #work, #about, #contact{ scroll-margin-top: var(--header-h); }
+  #work, #about, #contact{ scroll-margin-top:calc(var(--header-h) + 20px); }
   .chapter{
     scroll-snap-align:start;
+    scroll-snap-stop:normal;
     opacity:0.45; transform:translateY(26px) scale(0.985);
     transition:opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1);
     will-change:opacity, transform;
   }
   .chapter-page{
-    scroll-snap-stop:always;
     min-height:100svh;
-    display:flex; flex-direction:column; justify-content:center;
+    display:flex; flex-direction:column; justify-content:flex-start;
   }
-  .about-chapter{ scroll-snap-stop:always; }
+  .about-chapter{ scroll-snap-stop:normal; }
   .about-sub{
-    min-height:calc(100svh - var(--header-h));
-    display:flex; flex-direction:column; justify-content:center;
-    scroll-snap-align:start; scroll-snap-stop:always;
+    min-height:auto;
+    height:auto;
+    display:block;
+    overflow:visible;
+    scroll-snap-align:start;
+    scroll-snap-stop:normal;
+    padding-bottom:clamp(96px,12vh,160px);
+  }
+  .about-sub:last-child{padding-bottom:clamp(120px,14vh,190px);}
+  #contact{
+    min-height:auto;
+    height:auto;
+    overflow:visible;
+    padding-bottom:clamp(120px,14vh,190px);
   }
   .chapter.chapter-hero{opacity:1; transform:none;}
   .chapter.in-view{opacity:1; transform:translateY(0) scale(1);}
   @media (max-width:760px){
-    html{scroll-snap-type:none;}
+    html{scroll-snap-type:none; scroll-padding-top:var(--header-h);}
     .chapter-page{min-height:0;}
-    .about-sub{min-height:0; padding-top:60px;}
+    .about-sub{min-height:0; padding-top:60px; padding-bottom:80px;}
+    .about-sub:last-child{padding-bottom:100px;}
+    #contact{padding-bottom:100px;}
   }
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto; scroll-snap-type:none;}
@@ -343,8 +365,12 @@
 
   /* ---------- FOOTER ---------- */
   footer.final{
-    margin-top:130px; padding:60px 32px 44px; border-top:1px solid var(--line-strong);
+    margin-top:0;
+    padding:72px 32px max(64px, env(safe-area-inset-bottom));
+    border-top:1px solid var(--line-strong);
     display:flex; flex-direction:column; align-items:center; text-align:center; gap:18px;
+    scroll-snap-align:end;
+    scroll-snap-stop:normal;
   }
   footer.final .fbrand{display:flex; align-items:center; gap:10px;}
   footer.final .fbrand img{width:22px; height:22px; opacity:0.85;}
